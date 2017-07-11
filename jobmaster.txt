@@ -1,0 +1,461 @@
+//===== rAthena Script =======================================
+//=  轉職大師 
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.4
+//===== Compatible With: ===================================== 
+//= rAthena Project
+//===== Description: =========================================
+//= A fully functional job changer.
+//===== Additional Comments: =================================
+//= 1.0 Initial script.
+//= 1.1 Fixed reset on Baby job change.
+//= 1.2 Added Expanded Super Novice support and initial Kagerou/Oboro support.
+//= 1.3 Kagerou/Oboro added.
+//= 1.4 Rebellion added.
+//============================================================
+
+prontera,153,48,6	script	轉職大師	811,{
+function Job_Menu;
+function JobCname;
+
+	mes "[ 轉職大師 ]";
+	if (Class > Job_Soul_Linker) {
+		mes "目前沒有任何轉職項目可處理!";
+		close;
+	}
+	if (checkfalcon() || checkcart() || checkriding() || ismounting()) {
+		mes "在進行之前，請卸下您的 " +
+			((checkfalcon()) ? "老鷹 " : "") +
+			((checkcart()) ? "手推車 " : "") +
+			((checkriding()) ? "大嘴鳥 " : "") +
+			((ismounting()) ? "座騎 " : "") + "!";
+		close;
+	}
+	if (.SkillPointCheck && SkillPoint) {
+		mes "在繼續之前請使用所有技能點數!";
+		close;
+	}
+
+	.@eac = eaclass();
+	.@i = ((.ThirdClass) ? roclass(.@eac&EAJ_UPPERMASK) : Class);
+	if (.@i >= Job_Knight && .@i <= Job_Crusader2) {
+		if (BaseLevel < .Rebirth[0] || JobLevel < .Rebirth[1]) {
+			.@blvl = .Rebirth[0] - BaseLevel;
+			.@jlvl = .Rebirth[1] - JobLevel;
+			mes "您需要 " +
+				((.@blvl > 0) ? .@blvl + " 更多的角色等級 " + ((.@jlvl > 0) ? "/ " : "") : "") +
+				((.@jlvl > 0) ? .@jlvl + " 更多的職業等級 " : "") + "才能繼續!";
+			close;
+		}
+		if (Class > Job_Crusader2) {
+			mes "確定要進行三轉?";
+			next;
+			Job_Menu(roclass(.@eac|EAJL_THIRD));
+			close;
+		}
+		while(1) {
+			mes "請選擇一個項目";
+			next;
+			.@i = select(" ~ ^0055FF轉生^000000:" + ((.ThirdClass) ? " ~ ^FF0000三轉^000000" : "") + ": ~ ^777777取消^000000");
+			if (.@i == 3)
+				close;
+			mes "[ 轉職大師 ]";
+			mes "您確定嗎?";
+			next;
+			Job_Menu(((.@i == 1) ? Job_Novice_High : roclass(.@eac|EAJL_THIRD)));
+			mes "[ 轉職大師 ]";
+		}
+	}
+	.@j1 = roclass(.@eac|EAJL_2_1);
+	.@j2 = roclass(.@eac|EAJL_2_2);
+	if ((.@eac&EAJ_UPPERMASK) == EAJ_SUPER_NOVICE)
+		setarray .@exp[0], roclass(.@eac|EAJL_THIRD), 99;
+	if (Class == Job_Ninja || Class == Job_Gunslinger)
+		setarray .@exp[0], .@j1, 70;
+	if (.@exp[0] && .SecondExpanded) {
+		if (BaseLevel < .Rebirth[0] || JobLevel < .@exp[1]) {
+			.@blvl = .Rebirth[0] - BaseLevel;
+			.@jlvl = .@exp[1] - JobLevel;
+			mes "您需要 " +
+				((.@blvl > 0) ? .@blvl + " 更多的角色等級 " + ((.@jlvl > 0) ? "/ " : "") : "") +
+				((.@jlvl > 0) ? .@jlvl + " 更多的職業等級 " : "") + "才能繼續!";
+			close;
+		}
+		mes "轉職至 " + JobCname(.@exp[0]) + "?";
+		next;
+		Job_Menu(.@exp[0]);
+		close;
+	}
+	if (.@eac&EAJL_2)
+		if ((.@eac&(EAJL_UPPER|EAJL_BABY)) || roclass(.@eac|EAJL_UPPER) == -1) {
+			mes "目前沒有任何轉職項目可處理!";
+			close;
+		}
+	if ((.@eac&EAJ_BASEMASK) == EAJ_NOVICE) {
+		if (JobLevel < .JobReq[0])
+			mes "一轉要求的職業等級為 " + .JobReq[0] + " 級!";
+		else if (Class == Job_Novice_High && .LastJob && lastJob) {
+			mes "要現在轉職嗎?";
+			next;
+			Job_Menu(roclass((eaclass(lastJob)&EAJ_BASEMASK)|EAJL_UPPER));
+		} else {
+			switch(Class) {
+			case Job_Novice:
+				Job_Menu(
+					Job_Swordman,
+					Job_Mage,
+					Job_Archer,
+					Job_Acolyte,
+					Job_Merchant,
+					Job_Thief,
+					Job_Super_Novice,
+					Job_Taekwon,
+					Job_Gunslinger,
+					Job_Ninja,
+					Job_Baby
+				);
+				break;
+			case Job_Novice_High:
+				Job_Menu(
+					Job_Swordman_High,
+					Job_Mage_High,
+					Job_Archer_High,
+					Job_Acolyte_High,
+					Job_Merchant_High,
+					Job_Thief_High
+				);
+				break;
+			case Job_Baby:
+				Job_Menu(
+					Job_Baby_Swordman,
+					Job_Baby_Mage,
+					Job_Baby_Archer,
+					Job_Baby_Acolyte,
+					Job_Baby_Merchant,
+					Job_Baby_Thief,
+					Job_Super_Baby
+				);
+				break;
+			default:
+				mes "發生了錯誤!";
+				break;
+			}
+		}
+		close;
+	}
+	if (roclass(.@eac|EAJL_2_1) == -1 || roclass(.@eac|EAJL_2_2) == -1)
+		mes "沒有更多的職業可以轉職!";
+	else if (!(.@eac&EAJL_2) && JobLevel < .JobReq[1])
+		mes "二轉要求的職業等級為 " + .JobReq[1] + " 級!";
+	else if (.LastJob && lastJob && (.@eac&EAJL_UPPER)) {
+		mes "要現在轉職嗎?";
+		next;
+		Job_Menu(lastJob + Job_Novice_High);
+	} else
+		Job_Menu(.@j1, .@j2);
+	close;
+
+function Job_Menu {
+	while(1) {
+		if (getargcount() > 1) {
+			mes "請選擇一個職業";
+			.@menu$ = "";
+			for (.@i = 0; .@i < getargcount(); .@i++)
+				.@menu$ = .@menu$ + " ~ " + JobCname(getarg(.@i)) + ":";
+			.@menu$ = .@menu$+" ~ ^777777取消^000000";
+			next;
+			.@i = getarg(select(.@menu$) - 1, 0);
+			if (!.@i)
+				close;
+			if ((.@i == Job_Super_Novice || .@i == Job_Super_Baby) && BaseLevel < .SNovice) {
+				mes "[ 轉職大師 ]";
+				mes JobCname(.@i) + " 需要等級 " + .SNovice + " 級才能轉職!";
+				close;
+			}
+			mes "[ 轉職大師 ]";
+			mes "您確定嗎?";
+			next;
+		} else
+			.@i = getarg(0);
+		if (select(" ~ 轉職至 ^0055FF" + JobCname(.@i) + "^000000 職業: ~ ^777777" + ((getargcount() > 1) ? "回上一頁" : "取消") + "^000000") == 1) {
+			mes "[ 轉職大師 ]";
+			mes "你現在職業為 " + JobCname(.@i) + "!";
+			if (.@i == Job_Novice_High && .LastJob)
+				lastJob = Class;
+			jobchange .@i;
+			if (.@i == Job_Novice_High)
+				resetlvl(1);
+			else if (.@i == Job_Baby) {
+				resetstatus;
+				resetskill;
+				set SkillPoint,0;
+			}
+			specialeffect2 EF_ANGEL2;
+			specialeffect2 EF_ELECTRIC;
+			if (.Platinum)
+				callsub Get_Platinum;
+			close;
+		}
+		if (getargcount() == 1)
+			return;
+		mes "[ 轉職大師 ]";
+	}
+	end;
+}
+
+function JobCname	{
+	switch(getarg(0))
+	{
+	case JOB_NOVICE:	return "初心者";	break;
+	case JOB_SWORDMAN:	return "劍士";	break;
+	case JOB_MAGE:	return "魔法師";	break;
+	case JOB_ARCHER:	return "弓箭手";	break;
+	case JOB_ACOLYTE:	return "服事";	break;
+	case JOB_MERCHANT:	return "商人";	break;
+	case JOB_THIEF:	return "盜賊";	break;
+	case JOB_KNIGHT:	return "騎士";	break;
+	case JOB_PRIEST:	return "祭師";	break;
+	case JOB_WIZARD:	return "巫師";	break;
+	case JOB_BLACKSMITH:	return "鐵匠";	break;
+	case JOB_HUNTER:	return "獵人";	break;
+	case JOB_ASSASSIN:	return "刺客";	break;
+	case JOB_KNIGHT2:	return "騎士";	break;
+	case JOB_CRUSADER:	return "十字軍";	break;
+	case JOB_MONK:	return "武道家";	break;
+	case JOB_SAGE:	return "賢者";	break;
+	case JOB_ROGUE:	return "流氓";	break;
+	case JOB_ALCHEMIST:	return "鍊金術師";	break;
+	case JOB_BARD:	return "詩人";	break;
+	case JOB_DANCER:	return "舞孃";	break;
+	case JOB_CRUSADER2:	return "十字軍";	break;
+	case JOB_WEDDING:	return "結婚禮服";	break;
+	case JOB_SUPER_NOVICE:	return "超級初心者";	break;
+	case JOB_GUNSLINGER:	return "神槍手";	break;
+	case JOB_NINJA:	return "忍者";	break;
+	case JOB_XMAS:	return "聖誕節服裝";	break;
+	case JOB_SUMMER:	return "夏日服裝";	break;
+	case JOB_HANBOK:	return "韓國服裝";	break;
+	case JOB_OKTOBERFEST:	return "啤酒節服裝";	break;
+	case JOB_NOVICE_HIGH:	return "進階初心者";	break;
+	case JOB_SWORDMAN_HIGH:	return "進階劍士";	break;
+	case JOB_MAGE_HIGH:	return "進階魔法師";	break;
+	case JOB_ARCHER_HIGH:	return "進階弓箭手";	break;
+	case JOB_ACOLYTE_HIGH:	return "進階服事";	break;
+	case JOB_MERCHANT_HIGH:	return "進階商人";	break;
+	case JOB_THIEF_HIGH:	return "進階盜賊";	break;
+	case JOB_LORD_KNIGHT:	return "騎士領主";	break;
+	case JOB_HIGH_PRIEST:	return "神官";	break;
+	case JOB_HIGH_WIZARD:	return "超魔導師";	break;
+	case JOB_WHITESMITH:	return "神工匠";	break;
+	case JOB_SNIPER:	return "神射手";	break;
+	case JOB_ASSASSIN_CROSS:	return "十字刺客";	break;
+	case JOB_LORD_KNIGHT2:	return "騎士領主";	break;
+	case JOB_PALADIN:	return "聖殿十字軍";	break;
+	case JOB_CHAMPION:	return "武術宗師";	break;
+	case JOB_PROFESSOR:	return "智者";	break;
+	case JOB_STALKER:	return "神行太保";	break;
+	case JOB_CREATOR:	return "創造者";	break;
+	case JOB_CLOWN:	return "搞笑藝人";	break;
+	case JOB_GYPSY:	return "冷豔舞姬";	break;
+	case JOB_PALADIN2:	return "聖殿十字軍";	break;
+	case JOB_BABY:	return "初心者寶寶";	break;
+	case JOB_BABY_SWORDMAN:	return "劍士寶寶";	break;
+	case JOB_BABY_MAGE:	return "魔法師寶寶";	break;
+	case JOB_BABY_ARCHER:	return "弓箭手寶寶";	break;
+	case JOB_BABY_ACOLYTE:	return "服事寶寶";	break;
+	case JOB_BABY_MERCHANT:	return "商人寶寶";	break;
+	case JOB_BABY_THIEF:	return "盜賊寶寶";	break;
+	case JOB_BABY_KNIGHT:	return "騎士寶寶";	break;
+	case JOB_BABY_PRIEST:	return "祭師寶寶";	break;
+	case JOB_BABY_WIZARD:	return "巫師寶寶";	break;
+	case JOB_BABY_BLACKSMITH:	return "鐵匠寶寶";	break;
+	case JOB_BABY_HUNTER:	return "獵人寶寶";	break;
+	case JOB_BABY_ASSASSIN:	return "刺客寶寶";	break;
+	case JOB_BABY_KNIGHT2:	return "騎士寶寶";	break;
+	case JOB_BABY_CRUSADER:	return "十字軍寶寶";	break;
+	case JOB_BABY_MONK:	return "武道家寶寶";	break;
+	case JOB_BABY_SAGE:	return "賢者寶寶";	break;
+	case JOB_BABY_ROGUE:	return "流氓寶寶";	break;
+	case JOB_BABY_ALCHEMIST:	return "鍊金術師寶寶";	break;
+	case JOB_BABY_BARD:	return "詩人寶寶";	break;
+	case JOB_BABY_DANCER:	return "舞孃寶寶";	break;
+	case JOB_BABY_CRUSADER2:	return "十字軍寶寶";	break;
+	case JOB_SUPER_BABY:	return "超級初心者寶寶";	break;
+	case JOB_TAEKWON:	return "跆拳";	break;
+	case JOB_STAR_GLADIATOR:	return "拳聖";	break;
+	case JOB_STAR_GLADIATOR2:	return "拳聖";	break;
+	case JOB_SOUL_LINKER:	return "悟靈士";	break;
+	case JOB_GANGSI:	return "Gangsi";	break;
+	case JOB_DEATH_KNIGHT:	return "死亡騎士";	break;
+	case JOB_DARK_COLLECTOR:	return "黑暗收集者";	break;
+	case JOB_RUNE_KNIGHT:	return "盧恩騎士";	break;
+	case JOB_WARLOCK:	return "咒術士";	break;
+	case JOB_RANGER:	return "遊俠";	break;
+	case JOB_ARCH_BISHOP:	return "大主教";	break;
+	case JOB_MECHANIC:	return "機械工匠";	break;
+	case JOB_GUILLOTINE_CROSS:	return "十字斬首者";	break;
+	case JOB_RUNE_KNIGHT_T:	return "盧恩騎士";	break;
+	case JOB_WARLOCK_T:	return "咒術士";	break;
+	case JOB_RANGER_T:	return "遊俠";	break;
+	case JOB_ARCH_BISHOP_T:	return "大主教";	break;
+	case JOB_MECHANIC_T:	return "機械工匠";	break;
+	case JOB_GUILLOTINE_CROSS_T:	return "十字斬首者";	break;
+	case JOB_ROYAL_GUARD:	return "皇家禁衛隊";	break;
+	case JOB_SORCERER:	return "妖術師";	break;
+	case JOB_MINSTREL:	return "宮廷樂師";	break;
+	case JOB_WANDERER:	return "冷豔舞者";	break;
+	case JOB_SURA:	return "修羅";	break;
+	case JOB_GENETIC:	return "基因學者";	break;
+	case JOB_SHADOW_CHASER:	return "魅影追蹤者";	break;
+	case JOB_ROYAL_GUARD_T:	return "皇家禁衛隊";	break;
+	case JOB_SORCERER_T:	return "妖術師";	break;
+	case JOB_MINSTREL_T:	return "宮廷樂師";	break;
+	case JOB_WANDERER_T:	return "冷豔舞者";	break;
+	case JOB_SURA_T:	return "修羅";	break;
+	case JOB_GENETIC_T:	return "基因學者";	break;
+	case JOB_SHADOW_CHASER_T:	return "魅影追蹤者";	break;
+	case JOB_RUNE_KNIGHT2:	return "盧恩騎士";	break;
+	case JOB_RUNE_KNIGHT_T2:	return "盧恩騎士";	break;
+	case JOB_ROYAL_GUARD2:	return "皇家禁衛隊";	break;
+	case JOB_ROYAL_GUARD_T2:	return "皇家禁衛隊";	break;
+	case JOB_RANGER2:	return "遊俠";	break;
+	case JOB_RANGER_T2:	return "遊俠";	break;
+	case JOB_MECHANIC2:	return "機械工匠";	break;
+	case JOB_MECHANIC_T2:	return "機械工匠";	break;
+	case JOB_BABY_RUNE:	return "盧恩騎士寶寶";	break;
+	case JOB_BABY_WARLOCK:	return "咒術士寶寶";	break;
+	case JOB_BABY_RANGER:	return "遊俠寶寶";	break;
+	case JOB_BABY_BISHOP:	return "大主教寶寶";	break;
+	case JOB_BABY_MECHANIC:	return "機械工匠寶寶";	break;
+	case JOB_BABY_CROSS:	return "十字斬首者寶寶";	break;
+	case JOB_BABY_GUARD:	return "皇家禁衛隊寶寶";	break;
+	case JOB_BABY_SORCERER:	return "智者寶寶";	break;
+	case JOB_BABY_MINSTREL:	return "宮廷樂師寶寶";	break;
+	case JOB_BABY_WANDERER:	return "冷豔舞者寶寶";	break;
+	case JOB_BABY_SURA:	return "修羅寶寶";	break;
+	case JOB_BABY_GENETIC:	return "基因學者寶寶";	break;
+	case JOB_BABY_CHASER:	return "魅影追蹤者寶寶";	break;
+	case JOB_BABY_RUNE2:	return "盧恩騎士寶寶";	break;
+	case JOB_BABY_GUARD2:	return "皇家禁衛隊寶寶";	break;
+	case JOB_BABY_RANGER2:	return "遊俠寶寶";	break;
+	case JOB_BABY_MECHANIC2:	return "機械工匠寶寶";	break;
+	case JOB_SUPER_NOVICE_E:	return "進階超級初心者";	break;
+	case JOB_SUPER_BABY_E:	return "進階超級初心者寶寶";	break;
+	case JOB_KAGEROU:	return "影";	break;
+	case JOB_OBORO:	return "朧";	break;
+	case JOB_REBELLION:	return "反叛者";	break;
+	case JOB_SUMMONER:	return "召喚師";	break;
+	case JOB_BABY_SUMMONER:	return "召喚師寶寶";	break;
+	case JOB_BABY_NINJA:	return "忍者寶寶";	break;
+	case JOB_BABY_KAGEROU:	return "影寶寶";	break;
+	case JOB_BABY_OBORO:	return "朧寶寶";	break;
+	case JOB_BABY_TAEKWON:	return "跆拳寶寶";	break;
+	case JOB_BABY_STAR_GLADIATOR:	return "拳聖";	break;
+	case JOB_BABY_SOUL_LINKER:	return "悟靈士寶寶";	break;
+	case JOB_BABY_GUNSLINGER:	return "神槍手寶寶";	break;
+	case JOB_BABY_REBELLION:	return "反叛者寶寶";	break;
+	case JOB_BABY_STAR_GLADIATOR2:	return "拳聖寶寶";	break;
+	}
+}
+
+Get_Platinum:
+	skill "NV_FIRSTAID",1,SKILL_PERM;
+	switch (BaseClass) {
+	case Job_Novice:
+		if (Class != Job_Super_Novice)
+			skill "NV_TRICKDEAD",1,SKILL_PERM;
+		break;
+	case Job_Swordman:
+		skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+		skill "SM_FATALBLOW",1,SKILL_PERM;
+		skill "SM_AUTOBERSERK",1,SKILL_PERM;
+		break;
+	case Job_Mage:
+		skill "MG_ENERGYCOAT",1,SKILL_PERM;
+		break;
+	case Job_Archer:
+		skill "AC_MAKINGARROW",1,SKILL_PERM;
+		skill "AC_CHARGEARROW",1,SKILL_PERM;
+		break;
+	case Job_Acolyte:
+		skill "AL_HOLYLIGHT",1,SKILL_PERM;
+		break;
+	case Job_Merchant:
+		skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+		skill "MC_CHANGECART",1,SKILL_PERM;
+		skill "MC_LOUD",1,SKILL_PERM;
+		break;
+	case Job_Thief:
+		skill "TF_SPRINKLESAND",1,SKILL_PERM;
+		skill "TF_BACKSLIDING",1,SKILL_PERM;
+		skill "TF_PICKSTONE",1,SKILL_PERM;
+		skill "TF_THROWSTONE",1,SKILL_PERM;
+		break;
+	default:
+		break;
+	}
+	switch (BaseJob) {
+	case Job_Knight:
+		skill "KN_CHARGEATK",1,SKILL_PERM;
+		break;
+	case Job_Priest:
+		skill "PR_REDEMPTIO",1,SKILL_PERM;
+		break;
+	case Job_Wizard:
+		skill "WZ_SIGHTBLASTER",1,SKILL_PERM;
+		break;
+	case Job_Blacksmith:
+		skill "BS_UNFAIRLYTRICK",1,SKILL_PERM;
+		skill "BS_GREED",1,SKILL_PERM;
+		break;
+	case Job_Hunter:
+		skill "HT_PHANTASMIC",1,SKILL_PERM;
+		break;
+	case Job_Assassin:
+		skill "AS_SONICACCEL",1,SKILL_PERM;
+		skill "AS_VENOMKNIFE",1,SKILL_PERM;
+		break;
+	case Job_Crusader:
+		skill "CR_SHRINK",1,SKILL_PERM;
+		break;
+	case Job_Monk:
+		skill "MO_KITRANSLATION",1,SKILL_PERM;
+		skill "MO_BALKYOUNG",1,SKILL_PERM;
+		break;
+	case Job_Sage:
+		skill "SA_CREATECON",1,SKILL_PERM;
+		skill "SA_ELEMENTWATER",1,SKILL_PERM;
+		skill "SA_ELEMENTGROUND",1,SKILL_PERM;
+		skill "SA_ELEMENTFIRE",1,SKILL_PERM;
+		skill "SA_ELEMENTWIND",1,SKILL_PERM;
+		break;
+	case Job_Rogue:
+		skill "RG_CLOSECONFINE",1,SKILL_PERM;
+		break;
+	case Job_Alchemist:
+		skill "AM_BIOETHICS",1,SKILL_PERM;
+		break;
+	case Job_Bard:
+		skill "BA_PANGVOICE",1,SKILL_PERM;
+		break;
+	case Job_Dancer:
+		skill "DC_WINKCHARM",1,SKILL_PERM;
+		break;
+	default:
+		break;
+	}
+	return;
+
+OnInit:
+	setarray .Rebirth[0],99,50;	// Minimum base level, job level to rebirth OR change to third class
+	setarray .JobReq[0],10,40;	// Minimum job level to turn into 1st class, 2nd class
+	.ThirdClass = 1;			// Enable third classes? (1: yes / 0: no)
+	.SecondExpanded = 1;		// Enable new expanded second classes: Ex. Super Novice, Kagerou/Oboro, Rebellion? (1: yes / 0: no)
+	.SNovice = 45;				// Minimum base level to turn into Super Novice
+	.LastJob = 1;				// Enforce linear class changes? (1: yes / 0: no)
+	.SkillPointCheck = 1;		// Force player to use up all skill points? (1: yes / 0: no)
+	.Platinum = 1;				// Get platinum skills automatically? (1: yes / 0: no)
+	end;
+}

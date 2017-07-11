@@ -1,0 +1,21 @@
+/*--------------------------------------------------------------------------------/*
+  使用方法:
+	將呼叫程序貼至NPC、物品內即可使用
+
+  呼叫程序:
+	[密語欄][   對話欄   ]
+	[npc:GGT][ 輸入你所要說的字 ]
+/*--------------------------------------------------------------------------------*/
+
+-	script	GGT	-1,{
+OnWhisperGlobal:
+	set .@g_sql,query_sql("select alliance_id from `guild_alliance` where guild_id="+getcharid(2)+" and opposition=0",.@a_list_id);
+	set .@a_list_id[getarraysize(.@a_list_id)],getcharid(2);
+	for(set .@i,0;.@i<getarraysize(.@a_list_id);set .@i,.@i+1){
+	set .@guild_sql,query_sql("select name from `char` where guild_id="+.@a_list_id[.@i],.@name$);
+		for(set .@p,0;.@p<getarraysize(.@name$);set .@p,.@p+1){
+		message .@name$[.@p],"["+getguildname(getcharid(2))+"]"+strcharinfo(0)+" : "+@whispervar0$;
+		}
+	}
+	end;
+}

@@ -1,0 +1,274 @@
+//普隆德拉
+prontera.gat,146,91,4	script	高級傳送人員#prt	1275,{
+callfunc "warper";
+}
+
+//依斯魯得島
+izlude.gat,134,92,4	script	高級傳送人員#izl	1275,{
+callfunc "warper";
+}
+
+//艾爾帕蘭城
+aldebaran.gat,145,119,5	script	高級傳送人員#ald	1275,{
+callfunc "warper";
+}
+
+//吉芬
+geffen.gat,122,62,8	script	高級傳送人員#gef	1275,{
+callfunc "warper";
+}
+
+//夢羅克
+morocc.gat,154,97,5	script	高級傳送人員#moc	1275,{
+callfunc "warper";
+}
+
+//艾爾貝塔
+alberta.gat,25,238,5	script	高級傳送人員#alb	1275,{
+callfunc "warper";
+}
+
+//斐楊
+payon.gat,173,226,5	script	高級傳送人員#pay	1275,{
+callfunc "warper";
+}
+
+//天津城
+amatsu.gat,102,152,5	script	高級傳送人員#ama	1275,{
+callfunc "warper";
+}
+
+//姜餅城
+xmas.gat,149,135,5	script	高級傳送人員#xmas	1275,{
+callfunc "warper";
+}
+
+//企業
+lighthalzen.gat,166,100,5	script	高級傳送人員#lgh	1275,{
+callfunc "warper";
+}
+
+//鋼鐵
+einbroch.gat,57,203,5	script	高級傳送人員#ebr	1275,{
+callfunc "warper";
+}
+
+//泰國
+ayothaya.gat,212,173,5	script	高級傳送人員#ayo	1275,{
+callfunc "warper";
+}
+
+//洛陽
+louyang.gat,208,104,5	script	高級傳送人員#lou	1275,{
+callfunc "warper";
+}
+
+//死者
+niflheim.gat,201,185,5	script	高級傳送人員#nif	1275,{
+callfunc "warper";
+}
+
+//雨壇
+umbala.gat,130,133,5	script	高級傳送人員#umb	1275,{
+callfunc "warper";
+}
+
+//崑崙
+gonryun.gat,157,124,5	script	高級傳送人員#gon	1275,{
+callfunc "warper";
+}
+
+//朱諾
+yuno.gat,150,187,5	script	高級傳送人員#yuno	1275,{
+callfunc "warper";
+}
+
+//克魔
+comodo.gat,182,152,5	script	高級傳送人員#como	1275,{
+callfunc "warper";
+}
+
+//Rachel
+rachel.gat,134,144,5	script	高級傳送人員#rach	1275,{
+callfunc "warper";
+}
+
+//Veins
+veins.gat,208,161,5	script	高級傳送人員#vein	1275,{
+callfunc "warper";
+}
+
+//毀葛
+hugel.gat,88,151,5	script	高級傳送人員#huge	1275,{
+callfunc "warper";
+}
+
+function	script	warper	{
+	mes "[高級傳送人員]";
+	mes "^0088FF"+strcharinfo(0)+"^000000你好~";
+	mes "我是音樂精靈 ^3355FF高級傳送人員^000000";
+	mes "能在仙境傳說裡見到你~真的很高興唷！你要像我一樣喜愛仙境傳說喔。讓我們一起在這個幻想的國度裡留下美好的回憶吧！";
+	next;
+	mes "[高級傳送人員]";
+	mes "請你跟我說需要什麼樣的服務呢？";
+	next;
+		menu "請用精靈魔法幫我補充HP與SP",Lheal,
+		     "請傳送我到其它城鎮吧",cities,
+		     "請傳送我到緊張危險的地方吧",Ltrans,
+		     "還是等下一次再麻煩你吧",Lcon;
+
+		Lheal:
+			mes "[高級傳送人員]";
+			mes "為了讓各位的旅途更加順利，我會使用精靈魔法來為各位服務。";
+			next;
+			mes "[高級傳送人員]";
+			mes "好的";
+			mes "我會用音樂與存在於世上的水之精靈們溝通，試著借用他們的力量為你恢復HP與SP！";
+			next;
+			mes "[高級傳送人員]";
+			mes "水之精靈們，請聽我的傾訴………";
+			mes "請你祝福我的朋友";
+			next;
+			mes "[高級傳送人員]";
+			mes "應該有好一點了吧？很高興能幫上你的忙，也希望你能滿意我的服務。";
+			percentheal 100,100;
+			next;
+			mes "[高級傳送人員]";
+			mes "最後，願精靈的力量永遠與你同在！";
+			close;
+		cities:	
+			mes "[高級傳送人員]";
+			mes "人們對未知的世界總是充滿好奇，內心總是充滿著想走片各大城市的好奇心。";
+			mes "我想這是內心中冒險者的血液在沸騰，這感覺我能深深的體會………";
+			next;
+			mes "[高級傳送人員]";
+			mes "我會用音樂與存在於世上的時空精靈們溝通，試著借用他們的力量，為你傳送。";
+			next;
+			mes "[高級傳送人員]";
+			mes "請問你想要去那裡呢？";
+        		menu	
+
+				"普隆德拉",wprontera,
+				"依斯魯得島",wizlude,
+				"夢羅克",wmorroc,
+				"斐揚",wpayon,
+				"吉芬",wgeffen,
+				"艾爾貝塔",walberta,
+				"艾爾帕蘭",waldebaran,
+				"薑餅城",wxmas,
+				"克魔島",wcomodo,
+				"汶巴拉",wumbala,
+				"朱諾",wyuno,
+				"天津町",wamatsu,
+				"哎喲泰雅",wayothaya,
+				"崑崙",wgonryun,
+				"洛陽",wlouyang,
+				"密月島",wljaw,
+				"艾音布羅克",weinbroch,
+				"里希塔樂鎮",wlighthalzen,
+				"毀葛",whugel,
+				"Rachel",wrachel,
+				"Veins",wveins;
+				wprontera:     warp "prontera.gat",156,187;	 close;
+				wizlude:       warp "izlude.gat",128,111;	 close;
+				wmorroc:       warp "morocc.gat",159,93;	 close;
+				wpayon:	       warp "payon.gat",152,75;	 	 close;
+				wgeffen:       warp "geffen.gat",119,66;	 close;
+				walberta:      warp "alberta.gat",27,236;	 close;
+				waldebaran:    warp "aldebaran.gat",145,120;	 close;
+				wxmas:	       warp "xmas.gat",148,131;	 	 close;
+				wcomodo:       warp "comodo.gat",188,161;	 close;
+				wumbala:       warp "umbala.gat",130,130;	 close;
+				wyuno: 	       warp "yuno.gat",160,168;	 	 close;
+				wamatsu:       warp "amatsu.gat",197,86;	 close;
+				wayothaya:     warp "ayothaya.gat",149,118;	 close;
+				wgonryun:      warp "gonryun.gat",150,130;	 close;
+				wlouyang:      warp "louyang.gat",210,108;	 close;
+				wljaw:         warp "jawaii.gat",221,215;	 close;
+				weinbroch:     warp "einbroch.gat",64,200;	 close;
+				wlighthalzen:  warp "lighthalzen.gat",158,92;	 close;
+				whugel:	       warp "hugel.gat",96,145;	 	 close;
+				wrachel:       warp "rachel.gat",138,146;	 close;
+				wveins:	       warp "veins.gat",200,156;	 close;
+		Ltrans:
+			mes "[高級傳送人員]";
+			mes "人們對未知的世界總是充滿好奇，內心總是充滿著要征服所有危險區域的熱血。";
+			mes "我想這是內心中冒險者的血液在沸騰，這感覺我能深深的體會………";
+			next;
+			mes "[高級傳送人員]";
+			mes "我會用音樂與存在於世上的時空精靈們溝通，試著借用他們的力量，為你傳送。";
+			next;
+			mes "[高級傳送人員]";
+			mes "請問你想要去那裡呢？";
+        		menu	
+
+				"下水道 密穴",dculvert,
+				"北森 密穴",Lduna,
+				"沉船 密穴",dsunken,
+				"獸人 密穴",Ldunb,
+				"螞蟻 密穴",Ldunc,
+				"廢礦 密穴",Ldund,
+				"史芬克斯 密穴",Ldune,
+				"烏龜島",dturtle,
+				"尼芙菲姆",wniflheim,
+				"克雷斯特漢姆 古城",Lglast,
+				"葛帔尼亞",gefenia,
+				"諾可羅德",mag_dun,
+				"艾音貝赫",dein,
+				"機械人形工廠",kh_dun,
+				"爾邁斯 峽谷",djuperos,
+				"深淵湖水",dabbys,
+				"達納托斯",dthanatos,
+				"冰窟",ice,
+				"斐楊公會 密穴",g1,
+				"新城公會 密穴",g2,
+				"中央公會 密穴",g3,
+				"吉芬公會 密穴",g4;
+				dculvert:  warp "prt_sewb1.gat",126,248;	 close;
+				Lduna:	   warp "prt_fild01.gat",136,368;	 close;
+				dsunken:   warp "alb2trea.gat",75,98;		 close;
+				Ldunb:	   warp "gef_fild10.gat",67,334;	 close;
+				Ldunc:	   warp "moc_fild04.gat",210,329;	 close;
+				Ldund:	   warp "mjolnir_02.gat",79,361;	 close;
+				Ldune:	   warp "moc_fild19.gat",105,99;	 close;
+				dturtle:   warp "tur_dun01.gat",162,33;		 close;
+				wniflheim: warp "niflheim.gat",198,186;		 close;
+				Lglast:	   warp "gef_fild06.gat",45,304;	 close;
+				gefenia:   warp "gefenia01.gat",283,193;	 close;
+				mag_dun:   warp "yuno_fild03.gat",40,147;	 close;
+				dein:	   warp "einbech.gat",135,249;	 	 close;
+				kh_dun:	   warp "kh_dun01.gat",3,230;	 	 close;
+				djuperos:  warp "yuno_fild07.gat",218,176;	 close;
+				dabbys:	   warp "hu_fild05.gat",189,207;	 close;
+				dthanatos: warp "hu_fild01.gat",134,158;	 close;
+				ice:       warp "ra_fild01.gat",224,325;	 close;
+				g1:	   warp "gld_dun01",215,210;		 close;
+				g2:	   warp "gld_dun02",156,163;	 	 close;
+				g3:	   warp "gld_dun03",237,267;		 close;
+				g4:	   warp "gld_dun04",46,232;		 close;
+		Lcon:
+			mes "[高級傳送人員]";
+			mes "沒關係，有需要的話，請記得找我，我會在此為你服務。";
+			next;
+			mes "[高級傳送人員]";
+			mes "記得，在美好的仙境裡拋開一切，好好的享受。創造出屬於你的浪漫傳說，也請大家好好好的愛護我，我也會努力為各位服務的。";
+			close;
+
+//-----------------------定點提醒公告----------------------------------
+
+		// 每天7點、12點、18點執行
+		OnHour07:
+			announce "AM7點囉！該吃早飯囉",15;
+			end;
+		OnHour12:
+			announce "AM12囉！該吃午飯囉",15;
+			end;
+		OnHour18:
+			announce "PM6囉！該吃晚飯囉",15;
+			end;
+		// 每天23點59分執行
+		OnClock2359:
+			announce "剩1分鐘今天就要過囉！",15;
+			end;
+
+}

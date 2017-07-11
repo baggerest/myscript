@@ -1,0 +1,59 @@
+prontera,161,182,5	script	refinemain	86,{
+	//最高精鋉值
+	set .@maxlv,20;
+	set .@savelv,20;
+	//防具
+	setarray .@lv0[0],100,100,100,100,100,100,100,100,100,100,60,60,50,50,40,40,30,30,20,20;
+	setarray .@lv5[0],100,100,100,100,100,100,100,100,100,100,60,60,50,50,40,40,30,30,20,20;
+	//武器
+	setarray .@lv1[0],100,100,100,100,100,100,100,100,100,100,60,60,50,50,40,40,30,30,20,20;
+	setarray .@lv2[0],100,100,100,100,100,100,100,100,100,100,60,60,50,50,40,40,30,30,20,20;
+	setarray .@lv3[0],100,100,100,100,100,100,100,100,100,100,60,60,50,50,40,40,30,30,20,20;
+	setarray .@lv4[0],100,100,100,100,100,100,100,100,100,100,60,60,50,50,40,40,30,30,20,20;
+	for(set .@i,1;.@i<=10;set.@i,.@i+1){
+		if(getequipisequiped(.@i))
+			set .@menu$,.@menu$+"["+getequipname(.@i)+"]";
+		set .@menu$,.@menu$+":";
+	}
+	set .@part,select(.@menu$);
+	if(getequiprefinerycnt(.@part)<.@savelv)
+		for(set .@i,1;.@i<=10;set.@i,.@i+1)
+			successrefitem .@part;
+	else{
+		if((getequiprefinerycnt(.@part)<.@maxlv)&&(getequiprefinerycnt(.@part)>=.@savelv)){
+			set .@eqipparsa,getd(".@lv"+getequipweaponlv(.@part)+"["+getequiprefinerycnt(.@part)+"]");
+			set .@rand,rand(1,100);
+			if(.@eqipparsa>=.@rand)
+				successrefitem .@part;
+			else
+				failedrefitem .@part;
+		}
+	}
+	close;
+}
+
+
+/*	while(getequipisequiped(.@part)!=0){
+		if(getequiprefinerycnt(.@part)<.@maxlv){
+			set .@eqipparsa,getd(".@lv"+getequipweaponlv(.@part)+"["+getequiprefinerycnt(.@part)+"]");
+			set .@rand,rand(1,100);
+			message strcharinfo(0),"["+.@eqipparsa+"] - ["+.@rand+"] = ["+(.@eqipparsa-.@rand)+"]";
+			if(.@eqipparsa>=.@rand)
+				successrefitem .@part;
+			else{
+				set .@equipid,getequipid(.@part);
+				if(.@thehightlv<getequiprefinerycnt(.@part))
+					set .@thehightlv,getequiprefinerycnt(.@part);
+				message strcharinfo(0),"[自動系統] - 精鋉第[ "+.@count+" ]次 最高精鋉[ +"+.@thehightlv+" ]";
+				getitem .@equipid,1;
+				failedrefitem .@part;
+				set .@count,.@count+1;
+				equip .@equipid;
+				sleep2 300;
+			}
+		}else{
+			mes "共精鋉 "+.@count+" 次!";
+			close;
+		}
+	}
+*/

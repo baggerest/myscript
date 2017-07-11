@@ -1,0 +1,281 @@
+-	script	cn	-1,{
+OnInit:
+	set $@ml,99;
+	set $@mz,100000;
+	set $@mm,5000;
+	set $@wt,5000;
+	setarray $@MVP[1],
+		1087,1147,1190,1086,1115,1038,1511,1159,1389,1046,1059,1150,1688,1039,1157,1980,1112,1251,2068,1373,
+		1272,1885,1630,1252,1779,1874,1708,1492,1623,1418,1312,1583,1785,2022,1734,1685,1719,1871,1768,1658,
+		1751,1832,1917,1650,1648,1647,1649,1646,1651;
+	setarray $@mct[1],0,0,0,0,0,0,0,0,0,1;
+	setarray $@smc[1],1,1,2,2,3,3,4,4,5,5;
+	setarray $@grx[1],42,42,138,230,322,140,64,334,334,54;
+	setarray $@gry[1],285,369,369,368,368,285,183,234,89,91;
+	
+	for(set .@i,1;.@i<=5;set .@i,.@i+1){
+	removemapflag "guild_vs"+.@i,mf_gvg;
+	setmapflag "guild_vs"+.@i,mf_nomemo;
+	setmapflag "guild_vs"+.@i,mf_nosave;
+	setmapflag "guild_vs"+.@i,mf_nobaseexp;
+	setmapflag "guild_vs"+.@i,mf_nojobexp;
+	setmapflag "guild_vs"+.@i,mf_nomobloot;
+	setmapflag "guild_vs"+.@i,mf_nomvploot;
+	setmapflag "guild_vs"+.@i,mf_nopenalty;
+	setmapflag "guild_vs"+.@i,mf_nobranch;
+	}
+	removemapflag "guild_room",mf_gvg;
+	setmapflag "guild_room",mf_nomemo;
+	setmapflag "guild_room",mf_noteleport;
+	setmapflag "guild_room",mf_nosave;
+	setmapflag "guild_room",mf_nopenalty;
+	setmapflag "guild_room",mf_nobranch;
+	end;
+}
+
+quiz_02.gat,22,388,5	script	道場師太	953,{callfunc "tk";}
+guild_room.gat,37,290,5	script	道館兌獎員#10	922,{callfunc "gg";}
+guild_room.gat,37,374,5	script	道館兌獎員#20	922,{callfunc "gg";}
+guild_room.gat,133,373,5	script	道館兌獎員#30	922,{callfunc "gg";}
+guild_room.gat,225,371,5	script	道館兌獎員#40	922,{callfunc "gg";}
+guild_room.gat,317,371,5	script	道館兌獎員#50	922,{callfunc "gg";}
+guild_room.gat,135,288,5	script	道館兌獎員#60	922,{callfunc "gg";}
+guild_room.gat,59,188,5	script	道館兌獎員#70	922,{callfunc "gg";}
+guild_room.gat,330,236,5	script	道館兌獎員#80	922,{callfunc "gg";}
+guild_room.gat,330,91,5	script	道館兌獎員#90	922,{callfunc "gg";}
+guild_room.gat,54,94,5	script	道館兌獎員#100	922,{callfunc "gg";}
+guild_vs1.gat,50,49,4	script	裁判#1	811,{callfunc "dm";}
+guild_vs2.gat,50,49,4	script	裁判#2	811,{callfunc "dm";}
+guild_vs3.gat,50,49,4	script	裁判#3	811,{callfunc "dm";}
+guild_vs4.gat,50,49,4	script	裁判#4	811,{callfunc "dm";}
+guild_vs5.gat,50,49,4	script	裁判#5	811,{callfunc "dm";}
+
+function	script	tk	{
+	mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";
+	callfunc "mc";
+	if(BaseLevel>=$@ml)
+		if(getcharid(1)!=0)
+			if(callfunc("C_jp")==1)
+				callfunc "jp";
+			else
+				callfunc "pj";
+		else
+			mes "^ff0000沒有組隊^000000";
+	else
+		mes "^ff0000等級不足^000000";
+	close;
+}
+
+function	script	C_jp	{
+	for(set .@i,1;.@i<=5;set .@i,.@i+1)
+		if(getd("$@p"+.@i)==getcharid(1))
+		{
+			set @m,.@i;
+			return 1;
+		}
+	return 0;
+}
+
+function	script	jp	{
+	if(Zeny>$@mz+$@mz*(getd("$@ps"+@m)/10))
+		if(getd("$@w"+@m)==1)
+		{
+			if(getd("$@ps"+@m)>0)
+			{
+				for(set .@i,0;.@i<getarraysize(getd("$p"+getcharid(1)+"$"));set .@i,.@i+1)
+					if(getd("$p"+getcharid(1)+"$["+.@i+"]")==strcharinfo(0))
+						callfunc "gpp";
+				mes "^ff0000無法越關挑戰^000000";
+			}
+			else
+			{
+				setd "$p"+getcharid(1)+"$["+getarraysize(getd("$p"+getcharid(1)+"$"))+"]",strcharinfo(0);
+				callfunc "gpp";
+			}
+		}
+		else
+			mes "^ff0000隊友已經開始或結束^000000";
+	else
+		mes "^ff0000金錢不足^000000";
+	close;
+}
+
+function	script	gpp	{
+	set Zeny,Zeny-($@mz+$@mz*(getd("$@ps"+@m)/10));
+	warp "guild_vs"+@m,49,47;
+	return;
+}
+
+function	script	pj	{
+	if($@u==0)
+	{
+		callfunc "mc";
+		set $@u,1;
+		while(getmapusers("guild_vs1")==0||getmapusers("guild_vs2")==0||getmapusers("guild_vs3")==0||getmapusers("guild_vs4")==0||getmapusers("guild_vs5")==0)
+		{
+			set @m,rand(1,5);
+			if(getmapusers("guild_vs"+@m)==0)
+				callfunc "jr";
+		}
+		set $@u,0;
+		mes "^ff0000所有場地使用中^000000";
+	}
+	else
+		mes "^ff0000其他隊伍正在登錄^000000";
+	close;
+}
+
+function	script	mc	{
+	if($@u==0)
+	{
+		set $@u,1;
+		for(set .@i,1;.@i<=5;set .@i,.@i+1)
+			if(getmapusers("guild_vs"+.@i)==0)
+			{
+				setd "$@ur"+.@i+"$","";
+				setd "$@p"+.@i,0;
+				setd "$@ps"+.@i,0;
+				setd "$@w"+.@i,0;
+			}
+		set $@u,0;
+	}
+	else
+	{
+		mes "^ff0000其他隊伍正在登錄^000000";
+		close;
+	}
+	return;
+}
+
+function	script	jr	{
+	if(getd("$p"+getcharid(1))==0)
+	{
+		getpartymember(getcharid(1));
+		set .@pc,$@partymembercount;
+		for(set .@i,0;.@i<getarraysize(getd("$p"+getcharid(1)+"$"));set .@i,.@i+1)
+			setd "$p"+getcharid(1)+"$["+.@i+"]","";
+		copyarray getd("$p"+getcharid(1)+"$[0]"),$@partymembername$[0],.@pc;
+	}
+	else
+	{
+		for(set .@i,0;.@i<getarraysize(getd("$p"+getcharid(1)+"$"));set .@i,.@i+1)
+			if(getd("$p"+getcharid(1)+"$["+.@i+"]")==strcharinfo(0))
+				set .@tt,.@tt+1;
+		if(.@tt==0)
+		{
+			mes "^ff0000此續關隊伍的名單沒有你^000000";
+			set $@u,0;
+			close;
+		}
+	}
+	killmonster "guild_vs"+@m,"kmc::OnE"+@m;
+	setd "$@ur"+@m+"$",strcharinfo(0);
+	setd "$@p"+@m,getcharid(1);
+	setd "$@ps"+@m,getd("$p"+getcharid(1));
+	set getd("$p"+getcharid(1)),0;
+	setd "$@w"+@m,1;
+	enablenpc "裁判#"+@m;
+	announce "[道場公告] 隊伍["+getpartyname(getd("$@p"+@m))+"] 報名人["+getd("$@ur"+@m+"$")+"] 隊員請登記入場",bc_all;
+	callfunc "gpp";
+	set $@u,0;
+}
+
+function	script	dm	{
+	mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";
+	getpartymember(getcharid(1));
+	set .@pc,$@partymembercount;
+	if(getd("$@ur"+strnpcinfo(2)+"$")==strcharinfo(0))
+		if(.@pc==getmapusers("guild_vs"+strnpcinfo(2)))
+		{
+			mes "準備好開始挑戰了嗎?";
+			if(select("是的")==1)
+			{
+				mes "^FF0000關閉視窗"+($@mm/1000)+"秒後開始挑戰^000000";
+				close2;
+				disablenpc strnpcinfo(0);
+				setd "$@w"+strnpcinfo(2),0;
+				callfunc "mmc",strnpcinfo(2);
+			}
+		}
+		else
+			mes "參加人數(^FF0000"+getmapusers("guild_vs"+strnpcinfo(2))+"^000000)與隊伍人數(^FF0000"+.@pc+"^000000)不符，無法開始";
+	else
+		mes "請由報名人^FF0000"+getd("$@ur"+strnpcinfo(2)+"$")+"^000000開啟挑戰";
+	close;
+}
+
+function	script	mmc	{
+	sleep2 $@mm;
+	set .@stage,getd("$@ps"+getarg(0))/10+1;
+	set .@v,getd("$@ps"+getarg(0))%10+1;
+	setd "$@total"+getarg(0),$@smc[.@stage]+$@mct[.@v];
+
+	for(set .@i,1;.@i<=getd("$@total"+getarg(0));set .@i,.@i+1)
+	{
+		set .@MVP,rand(1,getarraysize($@MVP)-1);
+		monster "guild_vs"+getarg(0),50,49,"--ja--",$@MVP[.@MVP],1,"kmc::OnE"+getarg(0);
+		set .@mn$,.@mn$+","+getmonsterinfo($@MVP[.@MVP],MOB_NAME);
+	}
+	announce "第"+(getd("$@ps"+getarg(0))+1)+"關"+.@mn$,bc_map;
+}
+
+-	script	kmc	-1,{
+	OnE1:	set .@t,1;	goto ge;
+	OnE2:	set .@t,2;	goto ge;
+	OnE3:	set .@t,3;	goto ge;
+	OnE4:	set .@t,4;	goto ge;
+	OnE5:	set .@t,5;	goto ge;
+	ge:
+	set getd("$@total"+.@t),getd("$@total"+.@t)-1;
+	if(getd("$@total"+.@t)==0)
+	{
+		set getd("$@ps"+.@t),getd("$@ps"+.@t)+1;
+		announce "第"+(getd("$@ps"+.@t))+"關 挑戰成功",bc_map;
+
+		if(getd("$@ps"+.@t)%10==5||getd("$@ps"+.@t)%10==9)
+		{
+			enablenpc "裁判#"+.@t;
+			announce "休息時間",bc_blue|bc_map;
+		}
+		else if(getd("$@ps"+.@t)%10==0)
+		{
+			sleep2 $@wt;
+			callfunc "sp",.@t;
+			set .@ts,getd("$@ps"+.@t)/10;
+			areawarp "guild_vs"+.@t,0,0,300,300,"guild_room",$@grx[.@ts],$@gry[.@ts];
+		}
+		else
+			callfunc "mmc",.@t;
+	}
+	end;
+}
+
+function	script	sp	{
+	getpartymember(getd("$@p"+getarg(0)));
+	set .@pc,$@partymembercount;
+	for(set .@i,0;.@i<getarraysize(getd("$p"+getd("$@p"+getarg(0))+"$"));set .@i,.@i+1)
+		setd "$p"+getd("$@p"+getarg(0))+"$["+.@i+"]","";
+	if(getd("$@ps"+getarg(0))==100)
+	{
+		setd "$p"+getd("$@p"+getarg(0)),0;
+		announce "[道場公告] 隊伍["+getpartyname(getd("$@p"+getarg(0)))+"] 道館100關挑戰完成",bc_all;
+		return;
+	}
+	copyarray .@pm$[0],$@partymembername$[0],.@pc;
+	setd "$p"+getd("$@p"+getarg(0)),getd("$@ps"+getarg(0));
+	for(set .@i,0;.@i<.@pc;set .@i,.@i+1)
+		if(getmapxy(.@mp$,.@mx,.@my,0,.@pm$[.@i])==0)
+			if(.@mp$=="guild_vs"+getarg(0))
+			{
+				setd "$p"+getd("$@p"+getarg(0))+"$["+.@c+"]",.@pm$[.@i];
+				set .@c,.@c+1;
+			}
+	return;
+}
+
+function	script	gg	{
+	mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";
+	mes "恭喜你挑戰成功";
+	close2;
+	warp "SavePoint",0,0;
+}

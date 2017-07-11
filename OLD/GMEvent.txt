@@ -1,0 +1,245 @@
+-	script	OnGMPCScript	-1,{
+
+OnPCLoginEvent:
+	if(getgmlevel()==99){
+		//callfunc "AutoCommand","@monsterignore";
+		//callfunc "AddSC";
+		callfunc "AutoCommand","@speed 1";
+	}
+	end;
+
+OnPCDieEvent:
+	if(getgmlevel()==99){
+		doevent strnpcinfo(3)+"::OnAlive";
+		//callfunc "AddSC";
+	}
+	end;
+
+OnPCBaseLvUpEvent:
+	if(getgmlevel()==99){
+		//callfunc "AddSC";
+		callfunc "AutoCommand","@speed 1";
+	}
+	end;
+
+OnPCJobLvUpEvent:
+	if(getgmlevel()==99){
+		//callfunc "AddSC";
+		callfunc "AutoCommand","@speed 1";
+	}
+	end;
+
+OnAlive:
+	callfunc "AutoCommand","@alive";
+	//callfunc "AddSC";
+	callfunc "AutoCommand","@speed 1";
+	end;
+}
+
+function	script	AutoCommand	{
+	message strcharinfo(0),"AutoCommand:"+getarg(0);
+	atcommand getarg(0);
+	return;
+}
+
+function	script	AddSC	{
+
+switch(Class){
+/*
+【沒狀態的】
+0 初心者 4001 進階初心者 4023 寶寶初心者
+1 劍士 4024 寶寶劍士
+2 魔法師 4025 寶寶魔法師
+3 弓箭手 4026 寶寶弓箭手
+4 服侍 4027 寶寶服侍
+5 商人 4028 寶寶商人
+6 盜賊 4029 寶寶盜賊
+24 槍手 25 忍者 22 結婚禮服 4046 跆拳少年/少女
+*/
+
+//4002 進階劍士 4003 進階魔法師 4004 進階弓箭手 4005 進階服侍 4006 進階商人 4007 進階盜賊
+case 4002:case 4003:case 4004:case 4005:case 4006:case 4007:
+if(BaseLevel>=69)set @class,494;
+set @class$,"一轉上等職業的靈魂";
+break;
+
+//7 騎士 13 騎士(騎鳥) 4008 騎士領主 4014 騎士領主(騎鳥) 4030 寶寶騎士 4036 寶寶騎士(騎鳥) 4054 盧恩騎士 4060 轉生盧恩騎士 4096 盧恩騎士寶寶
+case 7:case 13:case 4008:case 4014:case 4030:case 4036:case 4054:case 4060:case 4096:
+set @class,452;
+set @class$,"騎士的靈魂";
+break;
+
+//8 牧師 4009 神官 4031 寶寶牧師 4057 大主教 4063 轉生大主教 4099 大主教寶寶
+case 8:case 4009:case 4031:case 4057:case 4063:case 4099:
+set @class,454;
+set @class$,"祭司的靈魂";
+break;
+
+//9 巫師 4010 超魔導士 4032 寶寶巫師 4055 術士 4061 轉生術士 4097 術士寶寶
+case 9:case 4010:case 4032:case 4055:case 4061:case 4097:
+set @class,453;
+set @class$,"巫師的靈魂";
+break;
+
+//10 鐵匠 4011 神工匠 4033 寶寶鐵匠 4058 機械師 4064 轉生機械師 4100 機械師寶寶
+case 10:case 4011:case 4033:case 4058:case 4064:case 4100:
+set @class,458;
+set @class$,"鐵匠的靈魂";
+break;
+
+//11 獵人 4012 神射手 4034 寶寶獵人 4056 遊俠 4062 轉生遊俠 4098 遊俠寶寶
+case 11:case 4012:case 4034:case 4056:case 4062:case 4098:
+set @class,450;
+set @class$,"獵人的靈魂";
+break;
+
+//12 刺客 4013 十字刺客 4035 寶寶刺客 4059 十字斬首者 4065 轉生十字斬首者 4101 十字斬首者寶寶
+case 12:case 4013:case 4035:case 4059:case 4065:case 4101:
+set @class,457;
+set @class$,"刺客的靈魂";
+break;
+
+//14 十字軍 21 十字軍(騎鳥) 4015 聖殿十字軍 4022 聖殿十字軍(騎鳥) 4037 寶寶十字軍 4044 寶寶十字軍(騎鳥) 4066 皇家護衛 4073 轉生皇家護衛 4102 皇家護衛寶寶
+case 14:case 21:case 4015:case 4022:case 4037:case 4044:case 4066:case 4073:case 4102:
+set @class,450;
+set @class$,"十字軍的靈魂";
+break;
+
+//15 武僧 4016 武術宗師 4038 寶寶武僧 4070 修羅 4077 轉生修羅 4106 修羅寶寶
+case 15:case 4016:case 4038:case 4070:case 4077:case 4106:
+set @class,447;
+set @class$,"武道家的靈魂";
+break;
+
+//16 賢者 4017 智者 4039 寶寶賢者 4067 召喚士 4074 轉生召喚士 4103 召喚士寶寶
+case 16:case 4017:case 4039:case 4067:case 4074:case 4103:
+set @class,449;
+set @class$,"賢者的靈魂";
+break;
+
+//17 流氓 4018 神行太保 4040 寶寶流氓 4072 暗影追跡者 4079 轉生暗影追跡者 4108 暗影追跡者寶寶
+case 17:case 4018:case 4040:case 4072:case 4079:case 4108:
+set @class,456;
+set @class$,"流氓的靈魂";
+break;
+
+//18 煉金術士 4019 創造者 4041 寶寶煉金術士 4071 遺傳學家 4078 轉生遺傳學家 4107 遺傳學家寶寶
+case 18:case 4019:case 4041:case 4071:case 4078:case 4107:
+set @class,445;
+set @class$,"鍊金術師的靈魂";
+break;
+
+//19 詩人 4020 搞笑藝人 4042 寶寶詩人 4068 宮廷樂師 4075 轉生宮廷樂師 4104 宮廷樂師寶寶
+//20 舞孃 4021 冷艷舞姬 4043 寶寶舞孃 4069 流浪舞者 4076 轉生流浪舞者 4105 流浪舞者寶寶
+case 19:case 4020:case 4042:case 4068:case 4075:case 4104:case 20:case 4021:case 4043:case 4069:case 4076:case 4105:
+set @class,455;
+set @class$,"吟遊詩人和舞孃的靈魂";
+break;
+
+//23 超級初心者 4045 寶寶超級初心者
+case 23:case 4045:
+set @class,451;
+set @class$,"超級初心者的靈魂";
+break;
+
+//4047 拳聖 4048 拳聖(漂浮)
+case 4047:case 4048:
+set @class,448;
+set @class$,"拳聖的靈魂";
+break;
+
+//4049 悟靈士
+case 4049:
+set @class,461;
+set @class$,"悟靈士的靈魂";
+break;
+}
+	message strcharinfo(0),"AutoSkill:386::靈感";
+	sc_start 386,86400000,5;
+	message strcharinfo(0),"AutoSkill:29::天使之障壁";
+	sc_start 29,86400000,10;
+	message strcharinfo(0),"AutoSkill:30::天使之賜福";
+	sc_start 30,86400000,10;
+	message strcharinfo(0),"AutoSkill:32::加速術";
+	sc_start 32,86400000,15;
+	message strcharinfo(0),"AutoSkill:35::神威祈福";
+	sc_start 35,86400000,5;
+	message strcharinfo(0),"AutoSkill:40::聖母之頌歌";
+	sc_start 40,86400000,5;
+	message strcharinfo(0),"AutoSkill:41::幸運之頌歌";
+	sc_start 41,86400000,5;
+	message strcharinfo(0),"AutoSkill:49::能量外套";
+	sc_start 49,86400000,1;
+	message strcharinfo(0),"AutoSkill:57::菠色克藥水";
+	sc_start 57,86400000,0;
+	message strcharinfo(0),"AutoSkill:115::聖母之祈福";
+	sc_start 115,86400000,5;
+	message strcharinfo(0),"AutoSkill:147::凱易哲";
+	sc_start 147,86400000,7;
+	message strcharinfo(0),"AutoSkill:149::凱誣僕";
+	sc_start 149,86400000,3;
+	message strcharinfo(0),"AutoSkill:329::淨化";
+	sc_start 329,86400000,1;
+	message strcharinfo(0),"AutoSkill:331::二道聖光";
+	sc_start 331,86400000,10;
+	message strcharinfo(0),"AutoSkill:332::聖典";
+	sc_start 332,86400000,5;
+	message strcharinfo(0),"AutoSkill:21::霸體";
+	sc_start 21,86400000,10;
+	message strcharinfo(0),"AutoSkill:108::靈氣劍";
+	sc_start 108,86400000,5;
+	message strcharinfo(0),"AutoSkill:109::雙劍挌擋";
+	sc_start 109,86400000,10;
+	message strcharinfo(0),"AutoSkill:110::集中攻擊";
+	sc_start 110,86400000,5;
+	message strcharinfo(0),"AutoSkill:312::魔力劍";
+	sc_start 312,86400000,5;
+	message strcharinfo(0),"AutoSkill:313::死亡反彈";
+	sc_start 313,86400000,10;
+	message strcharinfo(0),"AutoSkill:335::魔法省悟";
+	sc_start 335,86400000,5;
+	message strcharinfo(0),"AutoSkill:330::贖罪";
+	sc_start 330,86400000,5;
+	message strcharinfo(0),"AutoSkill:363::武器抵禦";
+	sc_start 363,86400000,5;
+	message strcharinfo(0),"AutoSkill:365::幻影步";
+	sc_start 365,86400000,5;
+	message strcharinfo(0),"AutoSkill:23::心神凝聚";
+	sc_start 23,86400000,10;
+	message strcharinfo(0),"AutoSkill:120::狙殺瞄準";
+	sc_start 120,86400000,10;
+	message strcharinfo(0),"AutoSkill:121::風之步";
+	sc_start 121,86400000,10;
+	message strcharinfo(0),"AutoSkill:344::微風恐懼";
+	sc_start 344,86400000,5;
+	message strcharinfo(0),"AutoSkill:561::精英狙擊";
+	sc_start 561,86400000,5;
+	message strcharinfo(0),"AutoSkill:119::致命塗毒";
+	sc_start 119,86400000,5;
+	message strcharinfo(0),"AutoSkill:159::退縮";
+	sc_start 159,86400000,10;
+	message strcharinfo(0),"AutoSkill:76::自動防禦";
+	sc_start 76,86400000,10;
+	message strcharinfo(0),"AutoSkill:77::反射盾";
+	sc_start 77,86400000,10;
+	message strcharinfo(0),"AutoSkill:80::反射盾";
+	sc_start 80,86400000,5;
+	message strcharinfo(0),"AutoSkill:376::反射傷害";
+	sc_start 376,86400000,5;
+	message strcharinfo(0),"AutoSkill:382::威信";
+	sc_start 382,86400000,5;
+	message strcharinfo(0),"AutoSkill:154::雙倍投擲";
+	sc_start 154,86400000,5;
+	message strcharinfo(0),"AutoSkill:559::烈火戰車";
+	sc_start 559,86400000,5;
+	message strcharinfo(0),"AutoSkill:389::打擊強化";
+	sc_start 389,86400000,5;
+	message strcharinfo(0),"AutoSkill:92::爆氣";
+	sc_start 92,86400000,5;
+
+	message strcharinfo(0),"AutoSkill:184::"+@class$+"";
+	sc_start4 184,86400000,5,@class,0,0;
+	message strcharinfo(0),"AutoSkill:血魔補滿::"+MaxHp+"/"+MaxSp;
+	heal MaxHp,MaxSp;
+	return;
+}

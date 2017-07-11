@@ -1,0 +1,29 @@
+-	script	myscript	-1,{
+OnPCLoginEvent:
+	if(getgmlevel()==99)
+	{
+		atcommand "@speed 1";
+	}
+	end;
+
+OnPCBaseLvUpEvent:
+	if(getgmlevel()==99)
+	{
+		set BaseExp,BaseExp+NextBaseExp;
+	}
+	end;
+
+OnPCJobLvUpEvent:
+	if(getgmlevel()==99)
+	{
+		set JobExp,JobExp+NextJobExp;
+	}
+	end;
+
+OnPCDieEvent:
+	if(getgmlevel()==99)
+	{
+		atcommand "@alive";
+	}
+	end;
+}

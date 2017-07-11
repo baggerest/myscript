@@ -1,0 +1,39 @@
+-	script	OnPCScript	-1,{
+
+//上線事件
+OnPCLoginEvent:
+	announce strcharinfo(0)+" 登入!",bc_all;
+	message strcharinfo(0),"Exp: "+getbattleflag("base_exp_rate")+"% / "+getbattleflag("job_exp_rate")+"%";
+	end;
+
+//離線事件
+OnPCLogoutEvent:
+	announce strcharinfo(0)+" 玩家登出!",bc_all,0xFF0000;
+	end;
+
+//角色升級事件
+OnPCBaseLvUpEvent:
+	
+	end;
+
+//職業升級事件
+OnPCJobLvUpEvent:
+	
+	end;
+
+//角色死亡事件
+OnPCDieEvent:
+	if(killerrid!=null)message strcharinfo(0),rid2name(killerrid)+" 給你致命一擊!!";
+	end;
+
+//NPC被你殺死事件
+OnNPCKillEvent:
+	setd "mob"+killedrid,getd("mob"+killedrid)+1;
+	message strcharinfo(0),"("+getd("mob"+killedrid)+") "+strmobinfo(2,killedrid)+" 已死亡!";
+	end;
+
+//地圖變換事件 - 獨立 Map_Chinses.txt
+//OnPCLoadMapEvent:
+//	end;
+
+}

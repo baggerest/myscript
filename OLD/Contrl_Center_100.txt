@@ -1,0 +1,341 @@
+-	script	設定#npc	-1,{
+OnInit:
+set $@pass,1;		//途中
+set $@downlv,50;	//最低等級
+set $@passcount,100;	//挑戰關數
+set $@GMlv,99;		//最低管理GM
+set $@GMctrl,1;		//加入GM管理
+set $@partyzeny,1;	//隊員繳費
+set $@partyzenyp,100;	//隊員繳費%
+//過關傳送位置
+setarray $@guildmapx[1],42,42,138,230,322,140,64,334,334,54;
+setarray $@guildmapy[1],285,369,369,368,368,285,183,234,89,91;
+//挑戰mvp名單
+setarray $@mob[1],1038,1039,1046,1059,1086,1087,1112,1115,1147,1150,1157,1159,1190,1251,1252,1272,1312,1373,1389,1418,1492,1511,1583,1623;
+//過關金錢
+setarray $@passzeny[2],300000,500000,1000000,2000000,5000000,10000000,18000000,40000000,80000000,150000000;
+//過關物品 $@item 物品id $@itemlist 物品數量
+setarray $@item10[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist10[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item20[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist20[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item30[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist30[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item40[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist40[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item50[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist50[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item60[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist60[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item70[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist70[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item80[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist80[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item90[1],522,617,603,7620,12211,12218,547,607,984,7621,12215,12219,604,608,985,12103,12216,12220,616,663,7619,12104,12217;
+setarray $@itemlist90[1],10,2,2,5,5,3,10,1,5,1,3,3,5,2,5,5,3,3,3,10,5,3,3;
+setarray $@item100[1],12202,12203,12204,12205,12206,12207;
+setarray $@itemlist100[1],1,1,1,1,1,1;
+//下5行勿刪，除bug用
+if($@passcount<10)set $@passcount,10;
+if($@passcount>100)set $@passcount,100;
+set $@passcount,($@passcount/10)*10;
+if($@partyzenyp<10)set $@partyzenyp,10;
+if($@partyzenyp>100)set $@partyzenyp,100;
+//地圖格式
+for(set .@num,1;.@num<6;set .@num,.@num+1){
+removemapflag "guild_vs"+.@num+".gat",mf_gvg;
+setmapflag "guild_vs"+.@num+".gat",mf_nomemo;
+setmapflag "guild_vs"+.@num+".gat",mf_noteleport;
+setmapflag "guild_vs"+.@num+".gat",mf_nosave;
+setmapflag "guild_vs"+.@num+".gat",mf_nopenalty;
+setmapflag "guild_vs"+.@num+".gat",mf_nobranch;
+}
+removemapflag "guild_room.gat",mf_gvg;
+setmapflag "guild_room.gat",mf_nomemo;
+setmapflag "guild_room.gat",mf_noteleport;
+setmapflag "guild_room.gat",mf_nosave;
+setmapflag "guild_room.gat",mf_nopenalty;
+setmapflag "guild_room.gat",mf_nobranch;
+end;
+}
+
+quiz_02.gat,22,388,5	script	道場師太#1	953,{callfunc "enjoy",1,100000;	end;}
+guild_room.gat,37,290,5	script	道場師太#2	953,5,5,{callfunc "enjoy",11,200000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,37,374,5	script	道場師太#3	953,5,5,{callfunc "enjoy",21,300000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,133,373,5	script	道場師太#4	953,5,5,{callfunc "enjoy",31,400000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,225,371,5	script	道場師太#5	953,5,5,{callfunc "enjoy",41,500000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,317,371,5	script	道場師太#6	953,5,5,{callfunc "enjoy",51,600000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,135,288,5	script	道場師太#7	953,5,5,{callfunc "enjoy",61,700000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,59,188,5	script	道場師太#8	953,5,5,{callfunc "enjoy",71,800000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,330,236,5	script	道場師太#9	953,5,5,{callfunc "enjoy",81,900000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,330,91,5	script	道場師太#10	953,5,5,{callfunc "enjoy",91,1000000,$@passzeny[strnpcinfo(2)];	end;}
+guild_room.gat,54,94,5	script	道場師太#11	953,5,5,{callfunc "enjoy",101,0,$@passzeny[strnpcinfo(2)];	end;}
+
+function	script	GMcase	{
+if(getgmlevel()==$@GMlv){mes "[ ^0065DF"+strnpcinfo(0)+"^000000 ]";}else{mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";}
+return;
+}
+
+function	script	enjoy	{
+if((getgmlevel()>=$@GMlv)&&($@GMctrl==1)){
+	callfunc("GMcase");
+	mes "道館管理系統!";
+	mes "途中參加挑戰["+$@pass+"] (1/0 開/關)";
+	mes "最低挑戰等級["+$@downlv+"] (建議50級以上)";
+	mes "挑戰關數["+$@passcount+"] (10~100)";
+	mes "隊員繳參賽費["+$@partyzeny+"] (1/0 開/關)";
+	mes "隊員繳參賽費%["+$@partyzenyp+"] (10~100%)";
+	menu "進入挑戰",-,"設定途中參加挑戰",GMpass,"設定最低挑戰等級",GMdownlv,"設定挑戰關數",GMpasscount,"設定隊員繳參賽費",GMpartyzeny,"設定隊員繳參賽費%",GMpartyzenyp;
+	next;	goto OnStart;
+GMpass:
+	input .@pass;
+	mes "設定途中參加挑戰:["+.@pass+"]";
+	mes "是否更改設定?";
+	menu "是",-;
+	set $@pass,.@pass;
+	mes "已更改-途中參加挑戰!";
+	close;
+GMdownlv:
+	input .@downlv;
+	mes "設定最低挑戰等級:["+.@downlv+"]";
+	mes "是否更改設定?";
+	menu "是",-;
+	set $@downlv,.@downlv;
+	mes "已更改-最低挑戰等級!";
+	close;
+GMpasscount:
+	input .@passcount;
+	if(.@passcount<10)set .@passcount,10;
+	if(.@passcount>100)set .@passcount,100;
+	mes "設定挑戰關數:["+.@passcount+"]";
+	mes "設定後所有場地挑戰者將傳送回城!";
+	mes "是否更改設定?";
+	menu "是",-;
+	areawarp "guild_room.gat",0,0,300,300,"quiz_02.gat",26,385;
+	for(set .@num,1;.@num<6;set .@num,.@num+1){
+	areawarp "guild_vs"+.@num+".gat",0,0,300,300,"quiz_02.gat",26,385;}
+	areawarp "guild_room.gat",0,0,370,370,"quiz_02.gat",26,385;
+	set $@passcount,.@passcount;
+	mes "已更改-挑戰關數!";
+	close;
+GMpartyzeny:
+	input .@partyzeny;
+	mes "設定隊員繳參賽費:["+.@partyzeny+"]";
+	mes "是否更改設定?";
+	menu "是",-;
+	set $@partyzeny,.@partyzeny;
+	mes "已更改-隊員繳參賽費!";
+	close;
+GMpartyzenyp:
+	input .@partyzenyp;
+	if(.@partyzenyp<10)set .@partyzenyp,10;
+	if(.@partyzenyp>100)set .@partyzenyp,100;
+	mes "設定隊員繳參賽費%:["+.@partyzenyp+"]";
+	mes "是否更改設定?";
+	menu "是",-;
+	set $@partyzenyp,.@partyzenyp;
+	mes "已更改-隊員繳參賽費%!";
+	close;
+}
+OnStart:
+	if((getarg(0)!=1)&&(getitemcase==0)){
+		set getitemcase,1;
+		percentheal 100,100;
+		set Zeny,Zeny+getarg(2);
+		dispbottom("獎金: "+getarg(2)/10000+"萬");
+		set .@item,rand(1,(getarraysize(getd("$@item"+(getarg(0)-1)))-1));
+		getitem getd("$@item"+(getarg(0)-1)+"["+.@item+"]"),getd("$@itemlist"+(getarg(0)-1)+"["+.@item+"]");
+	}
+	if(getarg(0)==($@passcount+1)){callfunc("GMcase");	mes "恭喜你挑戰"+$@passcount+"關成功!";	close2;	warp getsavepoint(0),getsavepoint(1),getsavepoint(2);	end;}
+	if(BaseLevel<$@downlv){callfunc("GMcase");	mes "基本等級"+$@downlv+"級才可參賽!";		mes "你未符合最低資格!";	close;}
+
+OnStar:
+	for(set .@num,1;.@num<6;set .@num,.@num+1){if(getmapusers("guild_vs"+.@num+".gat")==0){set getd("$@party"+.@num),0;}}
+	if(getcharid(1)==0){goto noparty;}
+	for(set .@num,1;.@num<6;set .@num,.@num+1){if(getcharid(1)==getd("$@party"+.@num))goto h_party;}
+	goto talk;
+
+noparty:	callfunc("GMcase");	mes "您沒有隊伍，無法參賽!";	close;
+
+h_party:
+	callfunc("GMcase");
+	if(($@pass==0)&&(getd("$@stage"+.@num)!=1)&&(getarg(0)==1)){mes "無法與隊員跳關參加挑戰!";	close;}
+	mes "您是^CC00CC"+getpartyname(getcharid(1))+"^000000的隊員";
+	if($@partyzeny==1){mes "須先繳納^FF0000"+((getarg(1)*$@partyzenyP)/100)/10000+"萬^000000元參加費";}
+	mes "你要加入嗎?";
+	next;
+	menu "好的",-;
+	for(set .@num,1;.@num<6;set .@num,.@num+1){
+		if(getcharid(1)==getd("$@party"+.@num)){
+			if(getd("$@partywait"+.@num)==0)goto Gone;
+			set getitemcase,0;
+			if($@partyzeny==1){if(zeny<((getarg(1)*$@partyzenyP)/100)){set .@partyzeny,1;	goto nozeny;}	set zeny,zeny-((getarg(1)*$@partyzenyP)/100);}
+			warp "guild_vs"+.@num+".gat",49,47;
+			end;
+		}
+	}callfunc("GMcase");	mes "隊友在你報名的時候挑戰結束了!";	close;
+
+Gone:	callfunc("GMcase");	mes "你的隊友已經先開始了";	close;
+
+talk:	callfunc("GMcase");
+	mes "您的隊伍想參加嗎?";
+	mes "須先繳納^FF0000"+getarg(1)/10000+"萬^000000元報名費";
+	next;
+	if(getarg(0)==1){menu "參加",-,"查看隊伍",Look;}else{menu "參加",-,"回主城",GoBack,"查看隊伍",Look;}
+	for(set .@num,1;.@num<6;set .@num,.@num+1){
+		if(getd("$@party"+.@num)!=null){
+			if(getcharid(1)==getd("$@party"+.@num)){
+				callfunc("GMcase");
+				mes "^FF8000隊友已經報名了!^000000";
+				close2;
+				if($@partyzeny==1){if(zeny<((getarg(1)*$@partyzenyP)/100)){set .@partyzeny,1;	goto nozeny;}	set zeny,zeny-((getarg(1)*$@partyzenyP)/100);}
+				warp "guild_vs"+.@num+".gat",49,47;
+				end;
+			}
+		}
+	}if(zeny<getarg(1))goto nozeny;
+
+StartRand:
+	if(($@party1!=0)&&($@party2!=0)&&($@party3!=0)&&($@party4!=0)&&($@party5!=0)){goto full;}
+	set .@mapindex,rand(1,5);
+	if(getmapusers("guild_vs"+.@mapindex+".gat")==0){goto enjoyinto;}
+	end;
+
+full:	callfunc("GMcase");
+	for(set .@num,1;.@num<6;set .@num,.@num+1){
+		mes "[場地("+.@num+")] : [^0000FF"+getpartyname(getd("$@party"+.@num))+"^000000]";
+	}
+	mes "全部場地正在挑戰中!";
+	close;
+GoBack:
+	warp getsavepoint(0),getsavepoint(1),getsavepoint(2);
+	end;
+
+Look:	callfunc("GMcase");
+	for(set .@num,1;.@num<6;set .@num,.@num+1){
+		mes "[場地("+.@num+")] : [^0000FF"+getpartyname(getd("$@party"+.@num))+"^000000]";
+	}
+	close;
+
+nozeny:	callfunc("GMcase");	if(.@partyzeny==1){mes "請湊足^FF0000"+((getarg(1)*$@partyzenyP)/100)/10000+"萬^000000元再挑戰";}else{mes "請湊足^FF0000"+getarg(1)/10000+"萬^000000元再挑戰";}	close;
+
+enjoyinto:
+	set zeny,zeny-getarg(1);
+	killmonster "guild_vs"+.@mapindex+".gat","mob::OnEVENT";
+	disablenpc "裁判#"+.@mapindex;
+	warp "guild_vs"+.@mapindex+".gat",49,47;
+	setd "$@partywait"+.@mapindex,1;
+	set getd("$@stage"+.@mapindex),getarg(0);
+	set getd("$@party"+.@mapindex),getcharid(1);
+	set getd("$@charid"+.@mapindex),getcharid(0);
+	announce "["+getpartyname(getd("$@party"+.@mapindex))+"] 隊員,請到[道場師太]集合",bc_all;
+	set getitemcase,0;
+	enablenpc "裁判#"+.@mapindex;
+}
+
+guild_vs1.gat,50,49,4	script	裁判#1	811,{callfunc "idaq",1;	end;}
+guild_vs2.gat,50,49,4	script	裁判#2	811,{callfunc "idaq",2;	end;}
+guild_vs3.gat,50,49,4	script	裁判#3	811,{callfunc "idaq",3;	end;}
+guild_vs4.gat,50,49,4	script	裁判#4	811,{callfunc "idaq",4;	end;}
+guild_vs5.gat,50,49,4	script	裁判#5	811,{callfunc "idaq",5;	end;}
+
+function	script	idaq	{
+	if(getcharid(0)!=getd("$@charid"+getarg(0)))goto ERROR;
+	callfunc("GMcase");
+	mes "您準備要開始挑戰了嗎?";
+	menu "是的",-;
+	next;
+	callfunc("GMcase");
+	mes "挑戰開始!";
+	callfunc "chal",getarg(0);
+	set getd("$@partywait"+getarg(0)),0;
+	disablenpc "裁判#"+getarg(0);
+	close;
+
+ERROR:	callfunc("GMcase");
+	mes "你不是報名人，無法開始!";
+	close;
+}
+
+function	script	chal	{
+OnCHAL:
+for(set .@num,1;.@num<101;set .@num,.@num+1){
+	if(getd("$@stage"+getarg(0))==.@num){
+		set .@stageA10,.@num%10;
+		if(((.@num*100)/$@passcount>0)&&((.@num*100)/$@passcount<=40)){set .@for,1;}
+		if(((.@num*100)/$@passcount>40)&&((.@num*100)/$@passcount<=70)){set .@for,2;}
+		if(((.@num*100)/$@passcount>70)&&((.@num*100)/$@passcount<=90)){set .@for,3;}
+		if(((.@num*100)/$@passcount>90)&&((.@num*100)/$@passcount<=100)){set .@for,4;}
+	}
+}
+	if(.@stageA10==0){set .@for,.@for+1;}
+	set getd("$@mvp"+getarg(0)),.@for;
+	for(set .@num,0;.@num<.@for;set .@num,.@num+1){
+		set .@mvp,rand(1,(getarraysize($@mob)-1));
+		monster "guild_vs"+getarg(0)+".gat",50,49,"--ja--",$@mob[.@mvp],1,"mob::OnEVENT";
+		set .@mobname$,.@mobname$+"|"+getmonsterinfo($@mob[.@mvp],MOB_NAME);
+	}
+	announce "第"+getd("$@stage"+getarg(0))+"關挑戰開始!("+.@mobname$+"|)",bc_map;
+return;
+}
+
+-	script	mob	-1,{
+OnEVENT:
+	sleep2 5000;
+	for(set .@num,1;.@num<6;set .@num,.@num+1){if(getd("$@party"+.@num)==getcharid(1))set .@num2,.@num;}
+	set getd("$@mvp"+.@num2),getd("$@mvp"+.@num2)-1;
+	if(getd("$@mvp"+.@num2)>0)end;
+	if((getd("$@stage"+.@num2)%10==5)||(getd("$@stage"+.@num2)%10==9))goto rest;
+	for(set .@num3,1;.@num3<11;set .@num3,.@num3+1){
+	if((getd("$@stage"+.@num2)%10==0)&&(getd("$@stage"+.@num2)/10==.@num3)){
+	callfunc "Ending",.@num2,$@guildmapx[.@num3],$@guildmapy[.@num3];}}
+	set getd("$@stage"+.@num2),getd("$@stage"+.@num2)+1;
+
+	callfunc "chal",.@num2;
+	set getd("$@partywait"+.@num2),0;
+	disablenpc "裁判#"+.@num2;
+	end;
+
+rest:
+	enablenpc "裁判#"+.@num2;
+	announce "休息時間!",bc_blue|bc_map;
+	set getd("$@stage"+.@num2),getd("$@stage"+.@num2)+1;
+	end;
+}
+
+function	script	Ending	{
+	areawarp "guild_vs"+getarg(0)+".gat",0,0,300,300,"guild_room.gat",getarg(1),getarg(2);
+	enablenpc "裁判#"+getarg(0);
+	end;
+}
+
+-	script	修裝人員::requite	-1,{
+set .@repairprice,5000;
+if(getbrokenid(1)==0) goto L_CANCEL_2;
+goto broken;
+end;
+broken:
+if(Zeny<.@repairprice)goto L_CANCEL_1;
+repair(1);
+if(getbrokenid(1)==0)goto L_CANCEL;
+set .@repair,.@repair+1;
+goto broken;
+end;
+
+L_CANCEL_1:	dispbottom("不足"+.@repairprice+"元");	end;
+L_CANCEL:	dispbottom("損壞: "+.@repair+" 件,修理完畢!");	set Zeny,Zeny-.@repairprice;	end;
+L_CANCEL_2:	dispbottom("損壞: "+.@repair+" 件");	end;
+}
+
+guild_vs1.gat,46,72,5	duplicate(requite)	修裝人員#1	900
+guild_vs2.gat,43,68,5	duplicate(requite)	修裝人員#2	900
+guild_vs3.gat,47,84,5	duplicate(requite)	修裝人員#3	900
+guild_vs4.gat,45,70,5	duplicate(requite)	修裝人員#4	900
+guild_vs5.gat,46,72,5	duplicate(requite)	修裝人員#5	900
+
+-	shop	sellnpc	807,501:-1,502:-1,503:-1,504:-1,505:-1,506:-1,522:-1,523:-1,545:-1,546:-1,547:-1,610:-1,645:-1,656:-1,657:-1,715:-1,717:-1,716:-1,1065:-1,7135:-1,7136:-1,7139:-1,678:-1,1750:-1,1751:-1,1752:-1,1753:-1,1754:-1,1755:-1,1756:-1,1757:-1,1758:-1,1759:-1,1760:-1,1761:-1,1762:-1,1763:-1,1764:-1,1765:-1,1766:-1,1767:-1,1767:-1,1768:-1,1769:-1,1770:-1,1771:-1,1772:-1
+guild_vs1.gat,53,72,3	script	補貨員#1	807,{callshop "sellnpc",1;}
+guild_vs2.gat,56,68,3	script	補貨員#2	807,{callshop "sellnpc",1;}
+guild_vs3.gat,52,84,3	script	補貨員#3	807,{callshop "sellnpc",1;}
+guild_vs4.gat,54,70,3	script	補貨員#4	807,{callshop "sellnpc",1;}
+guild_vs5.gat,53,72,3	script	補貨員#5	807,{callshop "sellnpc",1;}
