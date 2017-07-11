@@ -11,7 +11,8 @@ OnInit:
 		1751,1832,1917,1650,1648,1647,1649,1646,1651;
 	setarray $@event_one[1],0,0,0,0,0,0,0,0,0,1;
 	setarray $@event_ten[1],1,1,2,2,3,3,4,4,5,5;
-	setarray $@grxy$[1],"42,285","42,369","138,369","230,368","322,368","140,285","64,183","334,234","334,89","54,91";
+	setarray $@grx[1], 42, 42,138,230,322,140, 64,334,334,54;
+	setarray $@gry[1],285,369,369,368,368,285,183,234, 89, 91;
 	
 	for(set .@i,1;.@i<=$@mapcount;set .@i,.@i+1)
 	{
@@ -55,9 +56,10 @@ guild_vs5.gat,50,49,4	script	裁判#5	811,{callfunc "gamemaster";}
 
 function	script	fightmaster	{
 	mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";
-	callfunc("checksavepoint");
+	callfunc("showsavepoint");
 	callfunc("T_check");
 	callfunc("checksignparty");
+	callfunc("checkmap");
 	close;
 }
 
@@ -71,23 +73,38 @@ function	script	gamemaster	{
 	return;
 }
 
-//$@partyid
-//$@partywait
-//$@mapindex
+//$@mapindex 1~5
+//"$@partyid"+$@mapindex
+//"$@partywait"+$@mapindex
+//"$p"+getcharid(1)+"list"
+//"$p"+getcharid(1)+"stage"
+//"p"+getcharid(1)+"stage"
+
 function	script	checksignparty	{
 	for(set .@i,1;.@i<=$@mapcount;set .@i,.@i+1)
 	{
-		if(getd("$@partyid"+.@i)==getcharid(1))
-		{
-			if(getd("$@partywait"+.@i)==1)
-			{
-				
-			}else{
-				
-			}
-		}
+		callfunc("checksign",.@i);
+		callfunc("checkwait",.@i);
 	}
 	return;
+}
+
+function	script	checksign	{
+	if(getd("$@partyid"+getarg(0))==getcharid(1))
+	{
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+function	script	checkwait	{
+	if(getd("$@partywait"+getarg(0))==1)
+	{
+		return 1;
+	}else{
+		return 0;
+	}
 }
 
 function	script	checkmap	{
@@ -95,8 +112,8 @@ function	script	checkmap	{
 	return;
 }
 
-function	script	checksavepoint	{
-	mes "[ 挑戰結束將傳送至儲存點 ^ff0000"+getsavepoint(0)+"^000000 ]";
+function	script	showsavepoint	{
+	mes "[ 挑戰結束 -> 儲存點 ^ff0000"+getsavepoint(0)+"^000000 ]";
 	return;
 }
 
