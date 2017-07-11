@@ -11,7 +11,8 @@ OnInit:
 		1751,1832,1917,1650,1648,1647,1649,1646,1651;
 	setarray $@event_one[1],0,0,0,0,0,0,0,0,0,1;
 	setarray $@event_ten[1],1,1,2,2,3,3,4,4,5,5;
-	setarray $@grxy$[1],"42,285","42,369","138,369","230,368","322,368","140,285","64,183","334,234","334,89","54,91";
+	setarray $@grx[1], 42, 42,138,230,322,140, 64,334,334,54;
+	setarray $@gry[1],285,369,369,368,368,285,183,234, 89, 91;
 	
 	for(set .@i,1;.@i<=$@mapcount;set .@i,.@i+1)
 	{
@@ -34,30 +35,31 @@ OnInit:
 	end;
 }
 
-quiz_02.gat,22,388,5	script	¹DÀ]®v¤Ó#0	953,{callfunc "fightmaster";}
+quiz_02.gat,22,388,5	script	é“é¤¨å¸«å¤ª#0	953,{callfunc "fightmaster";}
 
-guild_room.gat,37,290,5	script	¹DÀ]§I¼ú­û#10	922,{callfunc "winmaster";}
-guild_room.gat,37,374,5	script	¹DÀ]§I¼ú­û#20	922,{callfunc "winmaster";}
-guild_room.gat,133,373,5	script	¹DÀ]§I¼ú­û#30	922,{callfunc "winmaster";}
-guild_room.gat,225,371,5	script	¹DÀ]§I¼ú­û#40	922,{callfunc "winmaster";}
-guild_room.gat,317,371,5	script	¹DÀ]§I¼ú­û#50	922,{callfunc "winmaster";}
-guild_room.gat,135,288,5	script	¹DÀ]§I¼ú­û#60	922,{callfunc "winmaster";}
-guild_room.gat,59,188,5	script	¹DÀ]§I¼ú­û#70	922,{callfunc "winmaster";}
-guild_room.gat,330,236,5	script	¹DÀ]§I¼ú­û#80	922,{callfunc "winmaster";}
-guild_room.gat,330,91,5	script	¹DÀ]§I¼ú­û#90	922,{callfunc "winmaster";}
-guild_room.gat,54,94,5	script	¹DÀ]§I¼ú­û#100	922,{callfunc "winmaster";}
+guild_room.gat,37,290,5	script	é“é¤¨å…Œçå“¡#10	922,{callfunc "winmaster";}
+guild_room.gat,37,374,5	script	é“é¤¨å…Œçå“¡#20	922,{callfunc "winmaster";}
+guild_room.gat,133,373,5	script	é“é¤¨å…Œçå“¡#30	922,{callfunc "winmaster";}
+guild_room.gat,225,371,5	script	é“é¤¨å…Œçå“¡#40	922,{callfunc "winmaster";}
+guild_room.gat,317,371,5	script	é“é¤¨å…Œçå“¡#50	922,{callfunc "winmaster";}
+guild_room.gat,135,288,5	script	é“é¤¨å…Œçå“¡#60	922,{callfunc "winmaster";}
+guild_room.gat,59,188,5	script	é“é¤¨å…Œçå“¡#70	922,{callfunc "winmaster";}
+guild_room.gat,330,236,5	script	é“é¤¨å…Œçå“¡#80	922,{callfunc "winmaster";}
+guild_room.gat,330,91,5	script	é“é¤¨å…Œçå“¡#90	922,{callfunc "winmaster";}
+guild_room.gat,54,94,5	script	é“é¤¨å…Œçå“¡#100	922,{callfunc "winmaster";}
 
-guild_vs1.gat,50,49,4	script	µô§P#1	811,{callfunc "gamemaster";}
-guild_vs2.gat,50,49,4	script	µô§P#2	811,{callfunc "gamemaster";}
-guild_vs3.gat,50,49,4	script	µô§P#3	811,{callfunc "gamemaster";}
-guild_vs4.gat,50,49,4	script	µô§P#4	811,{callfunc "gamemaster";}
-guild_vs5.gat,50,49,4	script	µô§P#5	811,{callfunc "gamemaster";}
+guild_vs1.gat,50,49,4	script	è£åˆ¤#1	811,{callfunc "gamemaster";}
+guild_vs2.gat,50,49,4	script	è£åˆ¤#2	811,{callfunc "gamemaster";}
+guild_vs3.gat,50,49,4	script	è£åˆ¤#3	811,{callfunc "gamemaster";}
+guild_vs4.gat,50,49,4	script	è£åˆ¤#4	811,{callfunc "gamemaster";}
+guild_vs5.gat,50,49,4	script	è£åˆ¤#5	811,{callfunc "gamemaster";}
 
 function	script	fightmaster	{
 	mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";
-	callfunc("checksavepoint");
+	callfunc("showsavepoint");
 	callfunc("T_check");
 	callfunc("checksignparty");
+	callfunc("checkmap");
 	close;
 }
 
@@ -71,23 +73,38 @@ function	script	gamemaster	{
 	return;
 }
 
-//$@partyid
-//$@partywait
-//$@mapindex
+//$@mapindex 1~5
+//"$@partyid"+$@mapindex
+//"$@partywait"+$@mapindex
+//"$p"+getcharid(1)+"list"
+//"$p"+getcharid(1)+"stage"
+//"p"+getcharid(1)+"stage"
+
 function	script	checksignparty	{
 	for(set .@i,1;.@i<=$@mapcount;set .@i,.@i+1)
 	{
-		if(getd("$@partyid"+.@i)==getcharid(1))
-		{
-			if(getd("$@partywait"+.@i)==1)
-			{
-				
-			}else{
-				
-			}
-		}
+		callfunc("checksign",.@i);
+		callfunc("checkwait",.@i);
 	}
 	return;
+}
+
+function	script	checksign	{
+	if(getd("$@partyid"+getarg(0))==getcharid(1))
+	{
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+function	script	checkwait	{
+	if(getd("$@partywait"+getarg(0))==1)
+	{
+		return 1;
+	}else{
+		return 0;
+	}
 }
 
 function	script	checkmap	{
@@ -95,18 +112,18 @@ function	script	checkmap	{
 	return;
 }
 
-function	script	checksavepoint	{
-	mes "[ ¬D¾Ôµ²§ô±N¶Ç°e¦ÜÀx¦sÂI ^ff0000"+getsavepoint(0)+"^000000 ]";
+function	script	showsavepoint	{
+	mes "[ æŒ‘æˆ°çµæŸ -> å„²å­˜é» ^ff0000"+getsavepoint(0)+"^000000 ]";
 	return;
 }
 
 function	script	checklevel	{
 	if(BaseLevel>=$@minlevel)
 	{
-		mes "^0000ffO^000000 ±zªºµ¥¯Å[ ^0000ff"+BaseLevel+"^000000 ]";
+		mes "^0000ffO^000000 æ‚¨çš„ç­‰ç´š[ ^0000ff"+BaseLevel+"^000000 ]";
 		return 0;
 	}else{
-		mes "^ff0000X ±zªºµ¥¯Å¤£¨¬ "+$@minlevel+"!!^000000";
+		mes "^ff0000X æ‚¨çš„ç­‰ç´šä¸è¶³ "+$@minlevel+"!!^000000";
 		return 1;
 	}
 	return 0;
@@ -115,10 +132,10 @@ function	script	checklevel	{
 function	script	checkparty	{
 	if(getcharid(1)!=0)
 	{
-		mes "^0000ffO^000000 ±zªº¶¤¥î[ ^0000ff"+getpartyname(getcharid(1))+"^000000 ]";
+		mes "^0000ffO^000000 æ‚¨çš„éšŠä¼[ ^0000ff"+getpartyname(getcharid(1))+"^000000 ]";
 		return 0;
 	}else{
-		mes "^ff0000X ±z¥Ø«e¨S¦³¶¤¥î!!^000000";
+		mes "^ff0000X æ‚¨ç›®å‰æ²’æœ‰éšŠä¼!!^000000";
 		return 1;
 	}
 	return 0;
@@ -127,10 +144,10 @@ function	script	checkparty	{
 function	script	checkzeny	{
 	if(Zeny>=$@fightzeny)
 	{
-		mes "^0000ffO^000000 ±zªº³ø¦W¶O[ ^0000ff"+$@fightzeny+"^000000 ]";
+		mes "^0000ffO^000000 æ‚¨çš„å ±åè²»[ ^0000ff"+$@fightzeny+"^000000 ]";
 		return 0;
 	}else{
-		mes "^ff0000X ±zªºª÷ÃB¤£¨¬ "+$@fightzeny+"!!^000000";
+		mes "^ff0000X æ‚¨çš„é‡‘é¡ä¸è¶³ "+$@fightzeny+"!!^000000";
 		return 1;
 	}
 	return 0;
@@ -143,7 +160,7 @@ function	script	T_check	{
 	if(.@ck!=0)
 	{
 		mes "===========================";
-		mes "[ ^ff0000µLªk°Ñ¥[¬D¾Ô!!^000000 ]";
+		mes "[ ^ff0000ç„¡æ³•åƒåŠ æŒ‘æˆ°!!^000000 ]";
 		close;
 	}
 	return;
