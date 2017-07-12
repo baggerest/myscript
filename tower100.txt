@@ -58,7 +58,7 @@ function	script	fightmaster	{
 	mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";
 	callfunc("showsavepoint");
 	callfunc("T_check");
-	callfunc("checksignparty");
+	callfunc("searchsignparty");
 	callfunc("checkmap");
 	close;
 }
@@ -76,15 +76,19 @@ function	script	gamemaster	{
 //$@mapindex 1~5
 //"$@partyid"+$@mapindex
 //"$@partywait"+$@mapindex
-//"$p"+getcharid(1)+"list"
+//"$p"+getcharid(1)+"list" ; which stage=1 set
 //"$p"+getcharid(1)+"stage"
+//"$@p"+getcharid(1)+"stage"
 //"p"+getcharid(1)+"stage"
 
-function	script	checksignparty	{
+function	script	signparty	{
 	for(set .@i,1;.@i<=$@mapcount;set .@i,.@i+1)
 	{
 		callfunc("checksign",.@i);
 		callfunc("checkwait",.@i);
+		callfunc("checksignmapuser",.@i);
+			callfunc("checkpartylist");
+			callfunc("checkstage");
 	}
 	return;
 }
@@ -100,6 +104,40 @@ function	script	checksign	{
 
 function	script	checkwait	{
 	if(getd("$@partywait"+getarg(0))==1)
+	{
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+function	script	checksignmapuser	{
+	if(getmapusers("guild_vs"+getarg(0))!=0)
+	{
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+function	script	checkpartylist	{
+	set .@arraycount,getarraysize(getd("$p"+getcharid(1)+"list"));
+	copyarray .@temparray[0],getd("$p"+getcharid(1)+"list[0]"),.@arraycount;
+	for(set .@i,0;.@i<.@arraycount;set .@i,.@i+1)
+	{
+		if(.@temparray[.@i]==getcharid(0))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	checkstage	{
+	set .@sqlpartystage,getd("$p"+getcharid(1)+"stage");
+	set .@temppartystage,getd("$@p"+getcharid(1)+"stage");
+	set .@sqlcharstage,getd("p"+getcharid(1)+"stage");
+	if((.@sqlcharstage==.@sqlpartystage)&&(.@sqlcharstage==.@temppartystage))
 	{
 		return 1;
 	}else{
