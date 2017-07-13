@@ -75,13 +75,13 @@ function	script	gamemaster	{
 
 //$@mapindex 1~5
 //"$@partyid"+$@mapindex
-//"$@partywait"+$@mapindex
+//"$@partywait"+$@mapindex ; 1=waitting
 //"$p"+getcharid(1)+"list" ; which stage=1 set
 //"$p"+getcharid(1)+"stage"
 //"$@p"+getcharid(1)+"stage"
 //"p"+getcharid(1)+"stage"
 
-function	script	signparty	{
+function	script	searchsignparty	{
 	for(set .@i,1;.@i<=$@mapcount;set .@i,.@i+1)
 	{
 		callfunc("checksign",.@i);
